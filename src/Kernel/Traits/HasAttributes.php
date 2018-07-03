@@ -35,7 +35,7 @@ trait HasAttributes
      *
      * @return $this
      */
-    public function setAttributes(array $attributes = [])
+    public function setAttributes($attributes = [])
     {
         $this->attributes = $attributes;
 
@@ -138,7 +138,7 @@ trait HasAttributes
      *
      * @return bool
      */
-    public function has(string $key)
+    public function has($key)
     {
         return Arr::has($this->attributes, $key);
     }
@@ -148,7 +148,7 @@ trait HasAttributes
      *
      * @return $this
      */
-    public function merge(array $attributes)
+    public function merge($attributes)
     {
         $this->attributes = array_merge($this->attributes, $attributes);
 

@@ -19,9 +19,6 @@ use Zhifu99\Kernel\Support;
  * @property \Zhifu99\Payment\Order\Client              $order  订单（发起申请，查询，取消）
  * @property \Zhifu99\Payment\Refund\Client             $refund 退款
  * @property \Zhifu99\Payment\Bill\Client               $bill   对账
- *
- * @method mixed pay(array $attributes)
- * @method mixed authCodeToOpenid(string $authCode)
  */
 class Application extends ServiceContainer
 {
@@ -93,16 +90,5 @@ class Application extends ServiceContainer
     public function getKey($endpoint = null)
     {
         return $this['config']->key;
-    }
-
-    /**
-     * @param string $name
-     * @param array  $arguments
-     *
-     * @return mixed
-     */
-    public function __call($name, $arguments)
-    {
-        return call_user_func_array([$this['base'], $name], $arguments);
     }
 }
