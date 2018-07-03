@@ -3,8 +3,6 @@
 /*
  * This file is part of the tuowt/Zhifu99\.
  *
-
- *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -21,9 +19,7 @@ use Pimple\Container;
 /**
  * Class ServiceContainer.
  *
- * @author overtrue <i@overtrue.me>
- *
- * @property \Zhifu99\Kernel\Config                  $config
+ * @property \Zhifu99\Kernel\Config                     $config
  * @property \Symfony\Component\HttpFoundation\Request  $request
  * @property \GuzzleHttp\Client                         $http_client
  * @property \Monolog\Logger                            $logger
@@ -85,7 +81,7 @@ class ServiceContainer extends Container
             // http://docs.guzzlephp.org/en/stable/request-options.html
             'http' => [
                 'timeout' => 5.0,
-                'base_uri' => 'https://api.weixin.qq.com/',
+                'base_uri' => 'http://zhifu.99.com/sdp/paysdk/chargev2/',
             ],
         ];
 

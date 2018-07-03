@@ -3,8 +3,6 @@
 /*
  * This file is part of the tuowt/Zhifu99\.
  *
-
- *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -68,10 +66,7 @@ class BaseClient
     protected function request(string $endpoint, array $params = [], $method = 'post', array $options = [], $returnResponse = false)
     {
         $base = [
-            'mch_id' => $this->app['config']['mch_id'],
-            'nonce_str' => uniqid(),
-            'sub_mch_id' => $this->app['config']['sub_mch_id'],
-            'sub_appid' => $this->app['config']['sub_appid'],
+            'appId' => $this->app['config']['appId'],
         ];
 
         $params = array_filter(array_merge($base, $this->prepends(), $params));
@@ -134,6 +129,6 @@ class BaseClient
      */
     protected function wrap(string $endpoint): string
     {
-        return $this->app->inSandbox() ? "sandboxnew/{$endpoint}" : $endpoint;
+        return $endpoint;
     }
 }

@@ -3,8 +3,6 @@
 /*
  * This file is part of the tuowt/Zhifu99\.
  *
-
- *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -27,14 +25,14 @@ class Client extends BaseClient
      */
     public function unify(array $params)
     {
-        if (empty($params['spbill_create_ip'])) {
-            $params['spbill_create_ip'] = ('NATIVE' === $params['trade_type']) ? Support\get_server_ip() : Support\get_client_ip();
+        if (empty($params['clientIp'])) {
+            $params['clientIp'] = Support\get_client_ip();
         }
 
-        $params['appid'] = $this->app['config']->app_id;
-        $params['notify_url'] = $params['notify_url'] ?? $this->app['config']['notify_url'];
+        $params['appId'] = $this->app['config']->appId;
+        $params['notifyUrl'] = $params['notifyUrl'] ?? $this->app['config']['notifyUrl'];
 
-        return $this->request($this->wrap('pay/unifiedorder'), $params);
+        return $this->request($this->wrap('create.ashx'), $params);
     }
 
     /**
@@ -78,7 +76,7 @@ class Client extends BaseClient
      */
     protected function query(array $params)
     {
-        $params['appid'] = $this->app['config']->app_id;
+        $params['appId'] = $this->app['config']->appId;
 
         return $this->request($this->wrap('pay/orderquery'), $params);
     }
@@ -95,10 +93,14 @@ class Client extends BaseClient
     public function close(string $tradeNo)
     {
         $params = [
-            'appid' => $this->app['config']->app_id,
-            'out_trade_no' => $tradeNo,
+            'appId' => $this->app['config']->appId,
+            'orderNO' => $tradeNo,
         ];
 
-        return $this->request($this->wrap('pay/closeorder'), $params);
+        if (empty($params['clientIp'])) {
+            $params['clientIp'] = Support\get_client_ip();
+        }
+
+        return $this->request($this->wrap('closeorder.ashx'), $params);
     }
 }

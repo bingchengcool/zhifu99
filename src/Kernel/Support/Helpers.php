@@ -3,8 +3,6 @@
 /*
  * This file is part of the tuowt/Zhifu99\.
  *
-
- *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -13,8 +11,6 @@ namespace Zhifu99\Kernel\Support;
 
 /*
  * helpers.
- *
- * @author overtrue <i@overtrue.me>
  */
 
 /**
@@ -30,9 +26,9 @@ function generate_sign(array $attributes, $key, $encryptMethod = 'md5')
 {
     ksort($attributes);
 
-    $attributes['key'] = $key;
+    $attributes['Key'] = $key;
 
-    return strtoupper(call_user_func_array($encryptMethod, [urldecode(http_build_query($attributes))]));
+    return call_user_func_array($encryptMethod, [implode('', $attributes)]);
 }
 
 /**
