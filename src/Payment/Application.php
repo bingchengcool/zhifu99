@@ -10,7 +10,6 @@
 namespace Zhifu99\Payment;
 
 use Closure;
-use Zhifu99\BasicService;
 use Zhifu99\Kernel\ServiceContainer;
 use Zhifu99\Kernel\Support;
 

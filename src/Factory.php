@@ -13,8 +13,6 @@ namespace Zhifu99;
  * Class Factory.
  *
  * @method static \Zhifu99\Payment\Application            payment(array $config)
- * @method static \Zhifu99\MiniProgram\Application        miniProgram(array $config)
- * @method static \Zhifu99\BasicService\Application       basicService(array $config)
  */
 class Factory
 {
