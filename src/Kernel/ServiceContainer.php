@@ -53,7 +53,7 @@ class ServiceContainer extends Container
      * @param array       $prepends
      * @param string|null $id
      */
-    public function __construct(array $config = [], array $prepends = [], string $id = null)
+    public function __construct($config = [], $prepends = [], $id = null)
     {
         $this->registerProviders($this->getProviders());
 
@@ -69,7 +69,7 @@ class ServiceContainer extends Container
      */
     public function getId()
     {
-        return $this->id ?? $this->id = md5(json_encode($this->userConfig));
+        return $this->id ? $this->id : $this->id = md5(json_encode($this->userConfig));
     }
 
     /**
@@ -130,7 +130,7 @@ class ServiceContainer extends Container
     /**
      * @param array $providers
      */
-    public function registerProviders(array $providers)
+    public function registerProviders($providers)
     {
         foreach ($providers as $provider) {
             parent::register(new $provider());

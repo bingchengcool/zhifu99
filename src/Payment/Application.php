@@ -20,8 +20,6 @@ use Zhifu99\Kernel\Support;
  * @property \Zhifu99\Payment\Order\Client              $order  订单（发起申请，查询，取消）
  * @property \Zhifu99\Payment\Refund\Client             $refund 退款
  * @property \Zhifu99\Payment\Bill\Client               $bill   对账
- * @property \Zhifu99\BasicService\Url\Client           $url
- * @property \Zhifu99\Payment\Security\Client           $security
  *
  * @method mixed pay(array $attributes)
  * @method mixed authCodeToOpenid(string $authCode)
@@ -32,12 +30,9 @@ class Application extends ServiceContainer
      * @var array
      */
     protected $providers = [
-        BasicService\Url\ServiceProvider::class,
-        Base\ServiceProvider::class,
         Bill\ServiceProvider::class,
         Order\ServiceProvider::class,
         Refund\ServiceProvider::class,
-        Security\ServiceProvider::class,
     ];
 
     /**
@@ -48,28 +43,6 @@ class Application extends ServiceContainer
             'base_uri' => 'http://zhifu.99.com/sdp/paysdk/chargev2/',
         ],
     ];
-
-    /**
-     * Build payment scheme for product.
-     *
-     * @param string $productId
-     *
-     * @return string
-     */
-    public function scheme(string $productId): string
-    {
-        $params = [
-            'appid' => $this['config']->app_id,
-            'mch_id' => $this['config']->mch_id,
-            'time_stamp' => time(),
-            'nonce_str' => uniqid(),
-            'product_id' => $productId,
-        ];
-
-        $params['sign'] = Support\generate_sign($params, $this['config']->key);
-
-        return 'weixin://wxpay/bizpayurl?'.http_build_query($params);
-    }
 
     /**
      * @param \Closure $closure
@@ -111,14 +84,6 @@ class Application extends ServiceContainer
     public function handleScannedNotify(Closure $closure)
     {
         return (new Notify\Scanned($this))->handle($closure);
-    }
-
-    /**
-     * @return bool
-     */
-    public function inSandbox(): bool
-    {
-        return (bool) $this['config']->get('sandbox');
     }
 
     /**

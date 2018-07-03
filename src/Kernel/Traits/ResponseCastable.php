@@ -3,8 +3,6 @@
 /*
  * This file is part of the tuowt/Zhifu99\.
  *
-
- *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -37,8 +35,10 @@ trait ResponseCastable
     {
         $response = Response::buildFromPsrResponse($response);
         $response->getBody()->rewind();
+        
+        $type  = $type ? $type : 'array';
 
-        switch ($type ?? 'array') {
+        switch ($type) {
             case 'collection':
                 return $response->toCollection();
             case 'array':

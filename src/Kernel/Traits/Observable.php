@@ -3,8 +3,6 @@
 /*
  * This file is part of the tuowt/Zhifu99\.
  *
-
- *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -19,8 +17,6 @@ use Zhifu99\Kernel\ServiceContainer;
 
 /**
  * Trait Observable.
- *
- * @author overtrue <i@overtrue.me>
  */
 trait Observable
 {
@@ -204,7 +200,7 @@ trait Observable
      * @throws \Zhifu99\Kernel\Exceptions\InvalidArgumentException
      * @throws \ReflectionException
      */
-    protected function resolveHandlerAndCondition($handler, $condition): array
+    protected function resolveHandlerAndCondition($handler, $condition)
     {
         if (is_int($handler) || (is_string($handler) && !class_exists($handler))) {
             list($handler, $condition) = [$condition, $handler];
