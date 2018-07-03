@@ -3,8 +3,6 @@
 /*
  * This file is part of the tuowt/Zhifu99\.
  *
-
- *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -13,8 +11,6 @@ namespace Zhifu99\Kernel\Support;
 
 /**
  * Class AES.
- *
- * @author overtrue <i@overtrue.me>
  */
 class AES
 {
@@ -26,7 +22,7 @@ class AES
      *
      * @return string
      */
-    public static function encrypt(string $text, string $key, string $iv, int $option = OPENSSL_RAW_DATA): string
+    public static function encrypt($text, $key, $iv, $option = OPENSSL_RAW_DATA)
     {
         self::validateKey($key);
         self::validateIv($iv);
@@ -43,7 +39,7 @@ class AES
      *
      * @return string
      */
-    public static function decrypt(string $cipherText, string $key, string $iv, int $option = OPENSSL_RAW_DATA, $method = null): string
+    public static function decrypt($cipherText, $key, $iv, $option = OPENSSL_RAW_DATA, $method = null)
     {
         self::validateKey($key);
         self::validateIv($iv);
@@ -64,7 +60,7 @@ class AES
     /**
      * @param string $key
      */
-    public static function validateKey(string $key)
+    public static function validateKey($key)
     {
         if (!in_array(strlen($key), [16, 24, 32], true)) {
             throw new \InvalidArgumentException(sprintf('Key length must be 16, 24, or 32 bytes; got key len (%s).', strlen($key)));
@@ -76,7 +72,7 @@ class AES
      *
      * @throws \InvalidArgumentException
      */
-    public static function validateIv(string $iv)
+    public static function validateIv($iv)
     {
         if (!empty($iv) && 16 !== strlen($iv)) {
             throw new \InvalidArgumentException('IV length must be 16 bytes.');

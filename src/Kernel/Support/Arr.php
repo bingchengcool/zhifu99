@@ -3,8 +3,6 @@
 /*
  * This file is part of the tuowt/Zhifu99\.
  *
-
- *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -25,7 +23,7 @@ class Arr
      *
      * @return array
      */
-    public static function add(array $array, $key, $value)
+    public static function add($array, $key, $value)
     {
         if (is_null(static::get($array, $key))) {
             static::set($array, $key, $value);
@@ -69,7 +67,7 @@ class Arr
      *
      * @return array
      */
-    public static function divide(array $array)
+    public static function divide($array)
     {
         return [array_keys($array), array_values($array)];
     }
@@ -82,7 +80,7 @@ class Arr
      *
      * @return array
      */
-    public static function dot(array $array, $prepend = '')
+    public static function dot($array, $prepend = '')
     {
         $results = [];
 
@@ -105,7 +103,7 @@ class Arr
      *
      * @return array
      */
-    public static function except(array $array, $keys)
+    public static function except($array, $keys)
     {
         static::forget($array, $keys);
 
@@ -120,7 +118,7 @@ class Arr
      *
      * @return bool
      */
-    public static function exists(array $array, $key)
+    public static function exists($array, $key)
     {
         return array_key_exists($key, $array);
     }
@@ -134,7 +132,7 @@ class Arr
      *
      * @return mixed
      */
-    public static function first(array $array, callable $callback = null, $default = null)
+    public static function first($array, callable $callback = null, $default = null)
     {
         if (is_null($callback)) {
             if (empty($array)) {
@@ -164,7 +162,7 @@ class Arr
      *
      * @return mixed
      */
-    public static function last(array $array, callable $callback = null, $default = null)
+    public static function last($array, callable $callback = null, $default = null)
     {
         if (is_null($callback)) {
             return empty($array) ? $default : end($array);
@@ -181,7 +179,7 @@ class Arr
      *
      * @return array
      */
-    public static function flatten(array $array, $depth = INF)
+    public static function flatten($array, $depth = INF)
     {
         return array_reduce($array, function ($result, $item) use ($depth) {
             $item = $item instanceof Collection ? $item->all() : $item;
@@ -202,7 +200,7 @@ class Arr
      * @param array        $array
      * @param array|string $keys
      */
-    public static function forget(array &$array, $keys)
+    public static function forget(&$array, $keys)
     {
         $original = &$array;
 
@@ -248,7 +246,7 @@ class Arr
      *
      * @return mixed
      */
-    public static function get(array $array, $key, $default = null)
+    public static function get($array, $key, $default = null)
     {
         if (is_null($key)) {
             return $array;
@@ -277,7 +275,7 @@ class Arr
      *
      * @return bool
      */
-    public static function has(array $array, $keys)
+    public static function has($array, $keys)
     {
         if (is_null($keys)) {
             return false;
@@ -321,7 +319,7 @@ class Arr
      *
      * @return bool
      */
-    public static function isAssoc(array $array)
+    public static function isAssoc($array)
     {
         $keys = array_keys($array);
 
@@ -336,7 +334,7 @@ class Arr
      *
      * @return array
      */
-    public static function only(array $array, $keys)
+    public static function only($array, $keys)
     {
         return array_intersect_key($array, array_flip((array) $keys));
     }
@@ -350,7 +348,7 @@ class Arr
      *
      * @return array
      */
-    public static function prepend(array $array, $value, $key = null)
+    public static function prepend($array, $value, $key = null)
     {
         if (is_null($key)) {
             array_unshift($array, $value);
@@ -370,7 +368,7 @@ class Arr
      *
      * @return mixed
      */
-    public static function pull(array &$array, $key, $default = null)
+    public static function pull(&$array, $key, $default = null)
     {
         $value = static::get($array, $key, $default);
 
@@ -389,7 +387,7 @@ class Arr
      *
      * @throws \InvalidArgumentException
      */
-    public static function random(array $array, int $amount = null)
+    public static function random($array, int $amount = null)
     {
         if (is_null($amount)) {
             return $array[array_rand($array)];
@@ -417,7 +415,7 @@ class Arr
      *
      * @return array
      */
-    public static function set(array &$array, string $key, $value)
+    public static function set(&$array, string $key, $value)
     {
         $keys = explode('.', $key);
 
@@ -447,7 +445,7 @@ class Arr
      *
      * @return array
      */
-    public static function where(array $array, callable $callback)
+    public static function where($array, callable $callback)
     {
         return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
     }

@@ -17,15 +17,15 @@ interface MessageInterface
     /**
      * @return string
      */
-    public function getType(): string;
+    public function getType();
 
     /**
      * @return mixed
      */
-    public function transformForJsonRequest(): array;
+    public function transformForJsonRequest();
 
     /**
      * @return string
      */
-    public function transformToXml(): string;
+    public function transformToXml();
 }
