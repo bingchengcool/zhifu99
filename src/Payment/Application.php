@@ -90,7 +90,7 @@ class Application extends ServiceContainer
      *
      * @return string
      */
-    public function getKey(string $endpoint = null)
+    public function getKey($endpoint = null)
     {
         return $this['config']->key;
     }

@@ -34,7 +34,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
      *
      * @param mixed $items
      */
-    public function __construct(array $items = [])
+    public function __construct($items = [])
     {
         foreach ($items as $key => $value) {
             $this->set($key, $value);
@@ -58,7 +58,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate, JsonSeria
      *
      * @return \Zhifu99\Kernel\Support\Collection
      */
-    public function only(array $keys)
+    public function only($keys)
     {
         $return = [];
 

@@ -29,11 +29,11 @@ class Client extends BaseClient
         if (empty($params['clientIp'])) {
             $params['clientIp'] = Support\get_client_ip();
         }
-        $params['currency'] = $params['currency'] ? $params['currency']: $this->app['config']['currency'];
+        $params['currency'] = isset($params['currency']) ? $params['currency']: $this->app['config']['currency'];
         
-        $params['timeExpire'] = $params['expireDateTime'] ? $params['expireDateTime']: date('Y-m-d H:i:s', strtotime("+1 day"));
+        $params['timeExpire'] = isset($params['expireDateTime']) ? $params['expireDateTime']: date('Y-m-d H:i:s', strtotime("+1 day"));
 
-        $params['notifyUrl'] = $params['notifyUrl'] ? $params['notifyUrl']: $this->app['config']['notifyUrl'];
+        $params['notifyUrl'] = isset($params['notifyUrl']) ? $params['notifyUrl']: $this->app['config']['notifyUrl'];
 
         return $this->request($this->wrap('create.ashx'), $params);
     }

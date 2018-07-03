@@ -21,7 +21,7 @@ class ArrayAccessible implements ArrayAccess, IteratorAggregate, Arrayable
 {
     private $array;
 
-    public function __construct(array $array = [])
+    public function __construct($array = [])
     {
         $this->array = $array;
     }

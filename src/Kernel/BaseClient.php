@@ -9,7 +9,6 @@
 
 namespace Zhifu99\Kernel;
 
-use Zhifu99\Kernel\Contracts\AccessTokenInterface;
 use Zhifu99\Kernel\Http\Response;
 use Zhifu99\Kernel\Traits\HasHttpRequests;
 use GuzzleHttp\Client;
@@ -32,11 +31,6 @@ class BaseClient
     protected $app;
 
     /**
-     * @var \Zhifu99\Kernel\Contracts\AccessTokenInterface
-     */
-    protected $accessToken;
-
-    /**
      * @var
      */
     protected $baseUri;
@@ -45,12 +39,10 @@ class BaseClient
      * BaseClient constructor.
      *
      * @param \Zhifu99\Kernel\ServiceContainer                    $app
-     * @param \Zhifu99\Kernel\Contracts\AccessTokenInterface|null $accessToken
      */
-    public function __construct(ServiceContainer $app, AccessTokenInterface $accessToken = null)
+    public function __construct(ServiceContainer $app)
     {
         $this->app = $app;
-        $this->accessToken = $accessToken ?? $this->app['access_token'];
     }
 
     /**
@@ -130,26 +122,6 @@ class BaseClient
     }
 
     /**
-     * @return AccessTokenInterface
-     */
-    public function getAccessToken(): AccessTokenInterface
-    {
-        return $this->accessToken;
-    }
-
-    /**
-     * @param \Zhifu99\Kernel\Contracts\AccessTokenInterface $accessToken
-     *
-     * @return $this
-     */
-    public function setAccessToken(AccessTokenInterface $accessToken)
-    {
-        $this->accessToken = $accessToken;
-
-        return $this;
-    }
-
-    /**
      * @param string $url
      * @param string $method
      * @param array  $options
@@ -205,28 +177,8 @@ class BaseClient
     {
         // retry
         $this->pushMiddleware($this->retryMiddleware(), 'retry');
-        // access token
-        $this->pushMiddleware($this->accessTokenMiddleware(), 'access_token');
         // log
         $this->pushMiddleware($this->logMiddleware(), 'log');
-    }
-
-    /**
-     * Attache access token to request query.
-     *
-     * @return \Closure
-     */
-    protected function accessTokenMiddleware()
-    {
-        return function (callable $handler) {
-            return function (RequestInterface $request, array $options) use ($handler) {
-                if ($this->accessToken) {
-                    $request = $this->accessToken->applyToRequest($request, $options);
-                }
-
-                return $handler($request, $options);
-            };
-        };
     }
 
     /**
@@ -259,7 +211,6 @@ class BaseClient
                 $response = json_decode($body, true);
 
                 if (!empty($response['errcode']) && in_array(abs($response['errcode']), [40001, 40014, 42001], true)) {
-                    $this->accessToken->refresh();
                     $this->app['logger']->debug('Retrying with refreshed access token.');
 
                     return true;
