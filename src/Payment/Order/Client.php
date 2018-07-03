@@ -23,14 +23,17 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    public function unify(array $params)
+    public function unify($params)
     {
+        $params['appId'] = $this->app['config']->appId;
         if (empty($params['clientIp'])) {
             $params['clientIp'] = Support\get_client_ip();
         }
+        $params['currency'] = $params['currency'] ? $params['currency']: $this->app['config']['currency'];
+        
+        $params['timeExpire'] = $params['expireDateTime'] ? $params['expireDateTime']: date('Y-m-d H:i:s', strtotime("+1 day"));
 
-        $params['appId'] = $this->app['config']->appId;
-        $params['notifyUrl'] = $params['notifyUrl'] ?? $this->app['config']['notifyUrl'];
+        $params['notifyUrl'] = $params['notifyUrl'] ? $params['notifyUrl']: $this->app['config']['notifyUrl'];
 
         return $this->request($this->wrap('create.ashx'), $params);
     }
@@ -44,26 +47,10 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    public function queryByOutTradeNumber(string $number)
+    public function queryByTradeNo($tradeNo)
     {
         return $this->query([
-            'out_trade_no' => $number,
-        ]);
-    }
-
-    /**
-     * Query order by transaction id.
-     *
-     * @param string $transactionId
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\Zhifu99\Kernel\Support\Collection|array|object|string
-     *
-     * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
-     */
-    public function queryByTransactionId(string $transactionId)
-    {
-        return $this->query([
-            'transaction_id' => $transactionId,
+            'orderNO' => $tradeNo,
         ]);
     }
 
@@ -74,11 +61,11 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    protected function query(array $params)
+    protected function query($params)
     {
         $params['appId'] = $this->app['config']->appId;
 
-        return $this->request($this->wrap('pay/orderquery'), $params);
+        return $this->request($this->wrap('query.ashx'), $params);
     }
 
     /**
@@ -90,7 +77,7 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    public function close(string $tradeNo)
+    public function close($tradeNo)
     {
         $params = [
             'appId' => $this->app['config']->appId,

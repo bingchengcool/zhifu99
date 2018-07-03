@@ -24,7 +24,7 @@ class Factory
      *
      * @return \Zhifu99\\Kernel\ServiceContainer
      */
-    public static function make($name, array $config)
+    public static function make($name, $config)
     {
         $namespace = Kernel\Support\Str::studly($name);
         $application = "\\Zhifu99\\{$namespace}\\Application";

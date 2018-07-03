@@ -17,11 +17,9 @@ use Zhifu99\Kernel\Support;
 /**
  * Class Application.
  *
- * @property \Zhifu99\Payment\Bill\Client               $bill
- * @property \Zhifu99\Payment\Jssdk\Client              $jssdk
- * @property \Zhifu99\Payment\Order\Client              $order
- * @property \Zhifu99\Payment\Refund\Client             $refund
- * @property \Zhifu99\Payment\Reverse\Client            $reverse
+ * @property \Zhifu99\Payment\Order\Client              $order  订单（发起申请，查询，取消）
+ * @property \Zhifu99\Payment\Refund\Client             $refund 退款
+ * @property \Zhifu99\Payment\Bill\Client               $bill   对账
  * @property \Zhifu99\BasicService\Url\Client           $url
  * @property \Zhifu99\Payment\Security\Client           $security
  *
@@ -37,11 +35,8 @@ class Application extends ServiceContainer
         BasicService\Url\ServiceProvider::class,
         Base\ServiceProvider::class,
         Bill\ServiceProvider::class,
-        Jssdk\ServiceProvider::class,
         Order\ServiceProvider::class,
         Refund\ServiceProvider::class,
-        Reverse\ServiceProvider::class,
-        Sandbox\ServiceProvider::class,
         Security\ServiceProvider::class,
     ];
 

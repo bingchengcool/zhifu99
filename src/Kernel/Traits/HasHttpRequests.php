@@ -3,8 +3,6 @@
 /*
  * This file is part of the tuowt/Zhifu99\.
  *
-
- *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -18,8 +16,6 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Trait HasHttpRequests.
- *
- * @author overtrue <i@overtrue.me>
  */
 trait HasHttpRequests
 {
@@ -64,7 +60,7 @@ trait HasHttpRequests
      *
      * @return array
      */
-    public static function getDefaultOptions(): array
+    public static function getDefaultOptions()
     {
         return self::$defaults;
     }
@@ -88,7 +84,7 @@ trait HasHttpRequests
      *
      * @return \GuzzleHttp\Client
      */
-    public function getHttpClient(): Client
+    public function getHttpClient()
     {
         if (!($this->httpClient instanceof ClientInterface)) {
             $this->httpClient = new Client();
@@ -105,7 +101,7 @@ trait HasHttpRequests
      *
      * @return $this
      */
-    public function pushMiddleware(callable $middleware, string $name = null)
+    public function pushMiddleware(callable $middleware, $name = null)
     {
         if (!is_null($name)) {
             $this->middlewares[$name] = $middleware;
@@ -121,7 +117,7 @@ trait HasHttpRequests
      *
      * @return array
      */
-    public function getMiddlewares(): array
+    public function getMiddlewares()
     {
         return $this->middlewares;
     }
@@ -135,7 +131,7 @@ trait HasHttpRequests
      *
      * @return \Psr\Http\Message\ResponseInterface|\Zhifu99\Kernel\Support\Collection|array|object|string
      */
-    public function request($url, $method = 'GET', $options = []): ResponseInterface
+    public function request($url, $method = 'GET', $options = [])
     {
         $method = strtoupper($method);
 
@@ -170,7 +166,7 @@ trait HasHttpRequests
      *
      * @return \GuzzleHttp\HandlerStack
      */
-    public function getHandlerStack(): HandlerStack
+    public function getHandlerStack()
     {
         if ($this->handlerStack) {
             return $this->handlerStack;
@@ -190,7 +186,7 @@ trait HasHttpRequests
      *
      * @return array
      */
-    protected function fixJsonIssue(array $options): array
+    protected function fixJsonIssue(array $options)
     {
         if (isset($options['json']) && is_array($options['json'])) {
             $options['headers'] = array_merge($options['headers'] ?? [], ['Content-Type' => 'application/json']);

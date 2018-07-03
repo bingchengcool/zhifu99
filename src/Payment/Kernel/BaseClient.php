@@ -16,8 +16,6 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class BaseClient.
- *
- * @author overtrue <i@overtrue.me>
  */
 class BaseClient
 {
@@ -63,7 +61,7 @@ class BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    protected function request(string $endpoint, array $params = [], $method = 'post', array $options = [], $returnResponse = false)
+    protected function request($endpoint, $params = [], $method = 'get', $options = [], $returnResponse = false)
     {
         $base = [
             'appId' => $this->app['config']['appId'],
@@ -72,11 +70,8 @@ class BaseClient
         $params = array_filter(array_merge($base, $this->prepends(), $params));
 
         $params['sign'] = Support\generate_sign($params, $this->app->getKey($endpoint));
-        $options = array_merge([
-            'body' => Support\XML::build($params),
-        ], $options);
 
-        $response = $this->performRequest($endpoint, $method, $options);
+        $response = $this->performRequest($endpoint, $method, $params);
 
         return $returnResponse ? $response : $this->castResponseToType($response, $this->app->config->get('response_type'));
     }
@@ -93,7 +88,7 @@ class BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    protected function requestRaw($endpoint, array $params = [], $method = 'post', array $options = [])
+    protected function requestRaw($endpoint, $params = [], $method = 'post', $options = [])
     {
         return $this->request($endpoint, $params, $method, $options, true);
     }
@@ -110,7 +105,7 @@ class BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    protected function safeRequest($endpoint, array $params, $method = 'post', array $options = [])
+    protected function safeRequest($endpoint, $params, $method = 'post', $options = [])
     {
         $options = array_merge([
             'cert' => $this->app['config']->get('cert_path'),
@@ -127,7 +122,7 @@ class BaseClient
      *
      * @return string
      */
-    protected function wrap(string $endpoint): string
+    protected function wrap($endpoint)
     {
         return $endpoint;
     }
