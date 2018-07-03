@@ -3,8 +3,6 @@
 /*
  * This file is part of the tuowt/Zhifu99\.
  *
-
- *
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
@@ -26,7 +24,7 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    public function get(string $date, string $type = 'ALL', array $optional = [])
+    public function get($date, $type = 'ALL', $optional = [])
     {
         $params = [
             'appid' => $this->app['config']->app_id,

@@ -117,13 +117,13 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    protected function refund(string $refundNumber, int $totalFee, int $refundFee, $optional = [])
+    protected function refund($refundNumber, $totalFee, $refundFee, $optional = [])
     {
         $params = array_merge([
             'out_refund_no' => $refundNumber,
             'total_fee' => $totalFee,
             'refund_fee' => $refundFee,
-            'appid' => $this->app['config']->app_id,
+            'appId' => $this->app['config']->appId,
         ], $optional);
 
         return $this->safeRequest($this->wrap('secapi/pay/refund'), $params);
@@ -139,10 +139,10 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    protected function query(string $number, string $type)
+    protected function query($number, $type)
     {
         $params = [
-            'appid' => $this->app['config']->app_id,
+            'appId' => $this->app['config']->appId,
             $type => $number,
         ];
 
