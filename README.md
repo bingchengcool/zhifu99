@@ -31,11 +31,13 @@ $result = $app->order->unify([
     'userId'         => '1',
     'orderNO'        => 'O123456',
     'channel'        => 'wx_mini',
+    // 支付的来源,如果不设置则会使用配置里的支付来源
+    'paySource'      => '0',
     'subject'        => '标题',
     'body'           => '腾讯充值中心-QQ会员充值',
     'expireDateTime' => date('Y-m-d H:i:s', strtotime("+1 day")),
     'amount'         => 88,
-    // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+    // 支付结果通知网址,如果不设置则会使用配置里的默认地址
     'notifyUrl'      => 'https://pay.weixin.qq.com/wxpay/pay.action',
 ]);
 ```
@@ -45,7 +47,7 @@ $result = $app->order->unify([
 $app = Factory::payment($config);
 
 $response = $app->handlePaidNotify(function ($notify, $successful){
-    
+    // 业务处理
 });
 
 return $response;
@@ -61,9 +63,9 @@ $app->order->queryByTradeNo($tradeNo, $channel);
 #### 订单查询：
 ```php
 $params = [
-    'orderNO' => '',  // 必填
-    'channel' => '',  // 必填
-    'username' =>     // 可选
+    'orderNO'   => '',  // 必填
+    'channel'   => '',  // 必填
+    'username'  => '',  // 可选
 ];
 
 $app->order->query($params);
@@ -72,9 +74,9 @@ $app->order->query($params);
 ### 订单取消：
 ```php
 $params = [
-    'orderNO' => '',  // 必填
-    'channel' => '',  // 必填
-    'username' =>     // 必填
+    'orderNO'   => '',  // 必填
+    'channel'   => '',  // 必填
+    'username'  => '',  // 必填
 ];
 
 $app->order->close($params);
