@@ -12,8 +12,7 @@ namespace Zhifu99\Payment\Order;
 use Zhifu99\Kernel\Support;
 use Zhifu99\Payment\Kernel\BaseClient;
 
-class Client extends BaseClient
-{
+class Client extends BaseClient {
     /**
      * Unify order.
      *
@@ -23,17 +22,22 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    public function unify($params)
-    {
+    public function unify($params) {
         $params['appId'] = $this->app['config']->appId;
         if (empty($params['clientIp'])) {
             $params['clientIp'] = Support\get_client_ip();
         }
-        $params['currency'] = isset($params['currency']) ? $params['currency']: $this->app['config']['currency'];
-        
-        $params['timeExpire'] = isset($params['expireDateTime']) ? $params['expireDateTime']: date('Y-m-d H:i:s', strtotime("+1 day"));
 
-        $params['notifyUrl'] = isset($params['notifyUrl']) ? $params['notifyUrl']: $this->app['config']['notifyUrl'];
+        $params['amount'] = number_format($params['amount'], 2);
+        $params['currency'] = isset($params['currency']) ? $params['currency'] : $this->app['config']->currency;
+        $params['paySource'] = isset($params['paySource']) ? $params['paySource'] : $this->app['config']->paySource;
+        if (isset($params['expireDateTime'])) {
+            $params['timeExpire'] = $params['expireDateTime'];
+            unset($params['expireDateTime']);
+        } else {
+            $params['timeExpire'] = date('Y-m-d H:i:s', strtotime("+1 day"));
+        }
+        $params['notifyUrl'] = isset($params['notifyUrl']) ? $params['notifyUrl'] : $this->app['config']['notifyUrl'];
 
         return $this->request($this->wrap('create.ashx'), $params);
     }
@@ -47,8 +51,7 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    public function queryByTradeNo($tradeNo, $channel)
-    {
+    public function queryByTradeNo($tradeNo, $channel) {
         return $this->query([
             'orderNO' => $tradeNo,
             'channel' => $channel
@@ -62,8 +65,7 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    protected function query($params)
-    {
+    protected function query($params) {
         $params['appId'] = $this->app['config']->appId;
 
         return $this->request($this->wrap('query.ashx'), $params);
@@ -78,13 +80,12 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    public function close($params)
-    {
+    public function close($params) {
         $params = [
-            'appId' => $this->app['config']->appId,
+            'appId'    => $this->app['config']->appId,
             'userName' => $params['userName'],
-            'channel' => $params['channel'],
-            'orderNO' => $params['tradeNo'],
+            'channel'  => $params['channel'],
+            'orderNO'  => $params['tradeNo'],
         ];
 
         if (empty($params['clientIp'])) {

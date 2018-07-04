@@ -68,14 +68,18 @@ class BaseClient {
         if (empty($this->middlewares)) {
             $this->registerHttpMiddlewares();
         }
-
         $base = [
             'appId' => $this->app['config']['appId'],
         ];
+        $params = array_merge($base, $this->prepends(), $params);
+        $signParams = Support\params_sort($endpoint, $params);
+        $params['sign'] = Support\generate_sign($signParams, $this->app->getKey($endpoint));
 
-        $params = array_filter(array_merge($base, $this->prepends(), $params));
-
-        $params['sign'] = Support\generate_sign($params, $this->app->getKey($endpoint));
+        if (strtoupper($method) == 'GET') {
+            $params = ['query' => $params];
+        } else {
+            $params = ['form_params' => $params];
+        }
 
         $response = $this->performRequest($endpoint, $method, $params);
 

@@ -16,10 +16,9 @@ use Zhifu99\Kernel\Support\XML;
 use Zhifu99\Payment\Kernel\Exceptions\InvalidSignException;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class Handler
-{
-    const SUCCESS = 'SUCCESS';
-    const FAIL = 'FAIL';
+abstract class Handler {
+    const SUCCESS = 'success';
+    const FAIL = 'fail';
 
     /**
      * @var \Zhifu99\Payment\Application
@@ -59,8 +58,7 @@ abstract class Handler
     /**
      * @param \Zhifu99\Payment\Application $app
      */
-    public function __construct($app)
-    {
+    public function __construct($app) {
         $this->app = $app;
     }
 
@@ -76,19 +74,17 @@ abstract class Handler
     /**
      * @param string $message
      */
-    public function fail($message)
-    {
+    public function fail($message) {
         $this->fail = $message;
     }
 
     /**
      * @param array $attributes
-     * @param bool  $sign
+     * @param bool $sign
      *
      * @return $this
      */
-    public function respondWith($attributes, $sign = false)
-    {
+    public function respondWith($attributes, $sign = false) {
         $this->attributes = $attributes;
         $this->sign = $sign;
 
@@ -100,11 +96,10 @@ abstract class Handler
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function toResponse()
-    {
+    public function toResponse() {
         $base = [
             'return_code' => is_null($this->fail) ? static::SUCCESS : static::FAIL,
-            'return_msg' => $this->fail,
+            'return_msg'  => $this->fail,
         ];
 
         $attributes = array_merge($base, $this->attributes);
@@ -123,8 +118,7 @@ abstract class Handler
      *
      * @throws \Zhifu99\Kernel\Exceptions\Exception
      */
-    public function getMessage()
-    {
+    public function getMessage() {
         if (!empty($this->message)) {
             return $this->message;
         }
@@ -151,8 +145,7 @@ abstract class Handler
      *
      * @throws \Zhifu99\Kernel\Exceptions\Exception
      */
-    public function decryptMessage($key)
-    {
+    public function decryptMessage($key) {
         $message = $this->getMessage();
         if (empty($message[$key])) {
             return null;
@@ -170,11 +163,11 @@ abstract class Handler
      *
      * @throws \Zhifu99\Payment\Kernel\Exceptions\InvalidSignException
      */
-    protected function validate($message)
-    {
+    protected function validate($message) {
         $sign = $message['sign'];
         unset($message['sign']);
 
+        $message = Support\params_sort(get_class($this), $message);
         if (Support\generate_sign($message, $this->app->getKey()) !== $sign) {
             throw new InvalidSignException();
         }
@@ -183,8 +176,7 @@ abstract class Handler
     /**
      * @param mixed $result
      */
-    protected function strict($result)
-    {
+    protected function strict($result) {
         if (true !== $result && is_null($this->fail)) {
             $this->fail(strval($result));
         }
