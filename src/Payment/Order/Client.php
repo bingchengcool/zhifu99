@@ -47,10 +47,11 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    public function queryByTradeNo($tradeNo)
+    public function queryByTradeNo($tradeNo, $channel)
     {
         return $this->query([
             'orderNO' => $tradeNo,
+            'channel' => $channel
         ]);
     }
 
@@ -77,11 +78,13 @@ class Client extends BaseClient
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    public function close($tradeNo)
+    public function close($params)
     {
         $params = [
             'appId' => $this->app['config']->appId,
-            'orderNO' => $tradeNo,
+            'userName' => $params['userName'],
+            'channel' => $params['channel'],
+            'orderNO' => $params['tradeNo'],
         ];
 
         if (empty($params['clientIp'])) {

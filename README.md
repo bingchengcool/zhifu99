@@ -4,10 +4,9 @@
 
 ## Usage
 
-基本使用:
+### 服务端发起支付请求:
 
 ```php
-
 use Zhifu99\Factory;
 
 $config = [
@@ -39,4 +38,32 @@ $result = $app->order->unify([
     'notifyUrl'      => 'https://pay.weixin.qq.com/wxpay/pay.action',
 ]);
 ```
+### 订单查询：
+#### 根据订单号查询：
+```php
 
+// 订单号查询
+$app->order->queryByTradeNo($tradeNo, $channel);
+```
+
+#### 订单查询：
+```php
+$params = [
+    'orderNO' => '',  // 必填
+    'channel' => '',  // 必填
+    'username' =>     // 可选
+];
+
+$app->order->query($params);
+```
+
+### 订单取消：
+```php
+$params = [
+    'orderNO' => '',  // 必填
+    'channel' => '',  // 必填
+    'username' =>     // 必填
+];
+
+$app->order->close($params);
+```
