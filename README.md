@@ -38,10 +38,21 @@ $result = $app->order->unify([
     'notifyUrl'      => 'https://pay.weixin.qq.com/wxpay/pay.action',
 ]);
 ```
+
+### 服务器异步通知：
+```php
+$app = Factory::payment($config);
+
+$response = $app->handlePaidNotify(function ($notify, $successful){
+    
+});
+
+return $response;
+```
+
 ### 订单查询：
 #### 根据订单号查询：
 ```php
-
 // 订单号查询
 $app->order->queryByTradeNo($tradeNo, $channel);
 ```

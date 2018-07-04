@@ -113,7 +113,7 @@ abstract class Handler
             $attributes['sign'] = Support\generate_sign($attributes, $this->app->getKey());
         }
 
-        return new Response(XML::build($attributes));
+        return new Response($attributes['return_code']);
     }
 
     /**
@@ -129,14 +129,10 @@ abstract class Handler
             return $this->message;
         }
 
-        try {
-            $message = XML::parse(strval($this->app['request']->getContent()));
-        } catch (\Throwable $e) {
-            throw new Exception('Invalid request XML: '.$e->getMessage(), 400);
-        }
+        $message = $this->app['request']->getContent();
 
         if (!is_array($message) || empty($message)) {
-            throw new Exception('Invalid request XML.', 400);
+            throw new Exception('Invalid request.', 400);
         }
 
         if ($this->check) {
