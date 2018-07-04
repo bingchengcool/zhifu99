@@ -10,16 +10,23 @@
 namespace Zhifu99\Payment\Kernel;
 
 use Zhifu99\Kernel\Support;
-use Zhifu99\Kernel\Traits\HasHttpRequests;
 use Zhifu99\Payment\Application;
+use Zhifu99\Kernel\Http\Response;
+use Zhifu99\Kernel\Traits\HasHttpRequests;
+use GuzzleHttp\Client;
+use GuzzleHttp\MessageFormatter;
+use GuzzleHttp\Middleware;
+use Monolog\Logger;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class BaseClient.
  */
-class BaseClient
-{
-    use HasHttpRequests { request as performRequest; }
+class BaseClient {
+    use HasHttpRequests {
+        request as performRequest;
+    }
 
     /**
      * @var \Zhifu99\Payment\Application
@@ -31,11 +38,8 @@ class BaseClient
      *
      * @param \Zhifu99\Payment\Application $app
      */
-    public function __construct(Application $app)
-    {
+    public function __construct(Application $app) {
         $this->app = $app;
-
-        $this->setHttpClient($this->app['http_client']);
     }
 
     /**
@@ -43,8 +47,7 @@ class BaseClient
      *
      * @return array
      */
-    protected function prepends()
-    {
+    protected function prepends() {
         return [];
     }
 
@@ -52,17 +55,20 @@ class BaseClient
      * Make a API request.
      *
      * @param string $endpoint
-     * @param array  $params
+     * @param array $params
      * @param string $method
-     * @param array  $options
-     * @param bool   $returnResponse
+     * @param array $options
+     * @param bool $returnResponse
      *
      * @return \Psr\Http\Message\ResponseInterface|\Zhifu99\Kernel\Support\Collection|array|object|string
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    protected function request($endpoint, $params = [], $method = 'get', $options = [], $returnResponse = false)
-    {
+    protected function request($endpoint, $params = [], $method = 'get', $options = [], $returnResponse = false) {
+        if (empty($this->middlewares)) {
+            $this->registerHttpMiddlewares();
+        }
+
         $base = [
             'appId' => $this->app['config']['appId'],
         ];
@@ -80,16 +86,15 @@ class BaseClient
      * Make a request and return raw response.
      *
      * @param string $endpoint
-     * @param array  $params
+     * @param array $params
      * @param string $method
-     * @param array  $options
+     * @param array $options
      *
      * @return ResponseInterface
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    protected function requestRaw($endpoint, $params = [], $method = 'post', $options = [])
-    {
+    protected function requestRaw($endpoint, $params = [], $method = 'post', $options = []) {
         return $this->request($endpoint, $params, $method, $options, true);
     }
 
@@ -97,22 +102,53 @@ class BaseClient
      * Request with SSL.
      *
      * @param string $endpoint
-     * @param array  $params
+     * @param array $params
      * @param string $method
-     * @param array  $options
+     * @param array $options
      *
      * @return \Psr\Http\Message\ResponseInterface|\Zhifu99\Kernel\Support\Collection|array|object|string
      *
      * @throws \Zhifu99\Kernel\Exceptions\InvalidConfigException
      */
-    protected function safeRequest($endpoint, $params, $method = 'post', $options = [])
-    {
+    protected function safeRequest($endpoint, $params, $method = 'post', $options = []) {
         $options = array_merge([
-            'cert' => $this->app['config']->get('cert_path'),
+            'cert'    => $this->app['config']->get('cert_path'),
             'ssl_key' => $this->app['config']->get('key_path'),
         ], $options);
 
         return $this->request($endpoint, $params, $method, $options);
+    }
+
+    /**
+     * Return GuzzleHttp\Client instance.
+     *
+     * @return \GuzzleHttp\Client
+     */
+    public function getHttpClient() {
+        if (!($this->httpClient instanceof Client)) {
+            $this->httpClient = $this->app['http_client'] ? $this->app['http_client'] : new Client();
+        }
+
+        return $this->httpClient;
+    }
+
+    /**
+     * Register Guzzle middlewares.
+     */
+    protected function registerHttpMiddlewares() {
+        // log
+        $this->pushMiddleware($this->logMiddleware(), 'log');
+    }
+
+    /**
+     * Log the request.
+     *
+     * @return \Closure
+     */
+    protected function logMiddleware() {
+        $formatter = new MessageFormatter($this->app['config']['http.log_template'] ? $this->app['config']['http.log_template'] : MessageFormatter::DEBUG);
+
+        return Middleware::log($this->app['logger'], $formatter);
     }
 
     /**
@@ -122,8 +158,7 @@ class BaseClient
      *
      * @return string
      */
-    protected function wrap($endpoint)
-    {
+    protected function wrap($endpoint) {
         return $endpoint;
     }
 }

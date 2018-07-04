@@ -9,6 +9,7 @@
 ```php
 use Zhifu99\Factory;
 
+// $config = Configure::read('zhifu99');
 $config = [
     // 必要配置
     'appId'     => 'xxxx',
