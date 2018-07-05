@@ -39,10 +39,11 @@ class Arr
      *
      * @return array
      */
-    public static function crossJoin(...$arrays)
+    public static function crossJoin()
     {
         $results = [[]];
 
+        $arrays = func_get_args();
         foreach ($arrays as $index => $array) {
             $append = [];
 

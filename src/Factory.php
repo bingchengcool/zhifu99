@@ -40,6 +40,6 @@ class Factory
      */
     public static function __callStatic($name, $arguments)
     {
-        return self::make($name, ...$arguments);
+        return self::make($name, $arguments[0]);
     }
 }

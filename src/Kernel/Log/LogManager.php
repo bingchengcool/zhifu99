@@ -506,6 +506,6 @@ class LogManager implements LoggerInterface {
      * @return mixed
      */
     public function __call($method, $parameters) {
-        return $this->driver()->$method(...$parameters);
+        return $this->driver()->$method($parameters[0]);
     }
 }
