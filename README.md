@@ -48,14 +48,38 @@ $result = $app->order->unify([
 ```
 
 ### 服务器异步通知：
+> 闭包中返回true 回调响应 success，其他都返回 fail
 ```php
 $app = Factory::payment($config);
+// 业务处理
+try {
+    $response = $app->handlePaidNotify(function ($notify, $successful) use ($app) {
+        if (!isset($notify['tradeNO']) || !isset($notify['tradeStatus'])) {
+            return '订单错误';
+        }
+        // 查询订单接口，判断订单真实状态
+        $wxOrder = $app->order->queryByTradeNo($notify['orderNO'], 'wx_pub_qr');
+        if ($wxOrder['errorCode'] != 0 || strtoupper($wxOrder['msg']) != 'OK') {
+            return '订单状态错误';
+        }
+        // 不考虑返回结果的多条，默认读取一条判断
+        $orderInfo = json_decode($wxOrder['data']['OrderItems'], true);
+        $orderInfo = array_filter($orderInfo);
+        if(!in_array($orderInfo['tradeStatus'], [
+            'TRADE_FINISHED',
+            'TRADE_SUCCESS'
+        ])) {
+            return '订单状态错误';
+        }
 
-$response = $app->handlePaidNotify(function ($notify, $successful){
-    // 业务处理
-});
+        return true;
+    });
+} catch (\Zhifu99\Kernel\Exceptions\Exception $e) {
+    $this->log($e, LOG_DEBUG);
+}
 
-return $response;
+// 直接返回回调处理后的结果
+return $response->send();
 ```
 
 ### 订单查询：
