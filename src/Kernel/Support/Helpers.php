@@ -67,7 +67,7 @@ function sign_sort($endpoint = null) {
             'clientIp' => '4',
             'Key'      => '5'
         ],
-        'Paid'                => [
+        'Zhifu99\Payment\Notify\Paid' => [
             'tradeStatus' => '0',
             'tradeNO'     => '1',
             'createTime'  => '2',
@@ -75,7 +75,7 @@ function sign_sort($endpoint = null) {
             'notifyTime'  => '4',
             'appId'       => '5',
             'paySource'   => '6',
-            'userName'    => '7',
+            'username'    => '7',
             'userId'      => '8',
             'orderNO'     => '9',
             'channel'     => '10',
