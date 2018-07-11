@@ -64,8 +64,8 @@ try {
         }
         // 不考虑返回结果的多条，默认读取一条判断
         $orderInfo = json_decode($wxOrder['data']['OrderItems'], true);
-        $orderInfo = array_filter($orderInfo);
-        if(!in_array($orderInfo['tradeStatus'], [
+        $orderInfo = array_shift($orderInfo);
+        if(!in_array($orderInfo['TradeStatus'], [
             'TRADE_FINISHED',
             'TRADE_SUCCESS'
         ])) {
@@ -74,12 +74,12 @@ try {
 
         return true;
     });
+
+    // 直接返回回调处理后的结果
+    return $response->send();
 } catch (\Zhifu99\Kernel\Exceptions\Exception $e) {
     $this->log($e, LOG_DEBUG);
 }
-
-// 直接返回回调处理后的结果
-return $response->send();
 ```
 
 ### 订单查询：
